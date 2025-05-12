@@ -1,0 +1,135 @@
+stages:
+  - node_build
+  - docker_build
+  - sonar_check
+
+dev_build:
+  image: registry.saas.crland.com.cn/choerodon-tools/cifront:node16
+  stage: node_build
+  script:
+    - yarn config set registry=http://maven.saas.crland.com.cn/nexus/repository/npm-group/
+    - yarn
+    - yarn run build:dev
+    - sh ./pipeline-scripts/node_build.sh
+  cache:
+    paths:
+      - dist
+    policy: push
+  only:
+    - develop
+    # - /^feature-.*$/
+
+uat_build:
+  image: registry.saas.crland.com.cn/choerodon-tools/cifront:node16
+  stage: node_build
+  script:
+    - yarn
+    - yarn run build:uat
+    - sh ./pipeline-scripts/node_build.sh
+  cache:
+    paths:
+      - dist
+    policy: push
+  only:
+    - /^release-.*$/
+
+node_build:
+  image: registry.saas.crland.com.cn/choerodon-tools/cifront:node16
+  stage: node_build
+  script:
+    - yarn config set registry=http://maven.saas.crland.com.cn/nexus/repository/npm-group/
+    - yarn
+    - yarn run build
+    - sh ./pipeline-scripts/node_build.sh
+  cache:
+    paths:
+      - dist
+    policy: push
+  only:
+    - master
+    - tags
+
+# docker_build:
+#   stage: docker_build
+#   script:
+#     - docker_build
+#     - chart_build
+#   cache:
+#     paths:
+#       - dist
+#     policy: pull
+#   only:
+#     - develop
+#     - /^feature-.*$/
+#     - /^release-.*$/
+#     - master
+#     - tags
+
+# 信创镜像打包命令
+docker_build_xc:
+  image: registry.saas.crland.com.cn/choerodon-tools/cibase:1.0.0-buildx
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ''
+    DOCKER_CLI_EXPERIMENTAL: enabled
+    DOCKER_BUILDKIT: 1
+  stage: docker_build
+  script:
+    - docker_build_xc
+    - chart_build
+  only:
+    - develop
+    # - /^feature-.*$/
+    - /^release-.*$/
+    - master
+    - tags
+
+sonar_check:
+  stage: sonar_check
+  image: sonarsource/sonar-scanner-cli
+  script:
+    - |
+      sonar-scanner \
+        -Dsonar.projectBaseDir=. \
+        -Dsonar.projectKey=${GROUP_NAME}:${PROJECT_NAME} \
+        -Dsonar.projectName=${GROUP_NAME}/${PROJECT_NAME} \
+        -Dsonar.projectVersion=${CI_COMMIT_TAG} \
+        -Dsonar.gitlab.project_id=${CI_PROJECT_ID} \
+        -Dsonar.sources=. \
+        -Dsonar.sourceEncoding=UTF-8
+  allow_failure: true
+  only:
+    - master
+
+.auto_devops: &auto_devops |
+  curl -o .auto_devops.sh \
+      "${CHOERODON_URL}/devops/ci?token=${Token}&type=front"
+  if [ $? -ne 0 ];then
+    cat .auto_devops.sh
+    exit 1
+  fi
+  source .auto_devops.sh
+
+  function docker_build() {
+    docker login -u ${DOCKER_USER} -p ${DOCKER_PWD} ${DOCKER_REGISTRY}
+    docker build --pull -t ${DOCKER_REGISTRY}/${GROUP_NAME}/${PROJECT_NAME}:${CI_COMMIT_TAG} .
+    docker push ${DOCKER_REGISTRY}/${GROUP_NAME}/${PROJECT_NAME}:${CI_COMMIT_TAG}
+  }
+
+  function docker_build_xc() {
+    # 拷贝dist包到dockerfile目录
+    cp -r /cache/${CI_PROJECT_NAME}-${CI_PROJECT_ID}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}/dist .
+    cp -rf /root/.docker/* .choerodon/.docker/
+    docker login -u ${DOCKER_USER} -p ${DOCKER_PWD} ${DOCKER_REGISTRY}
+    # 构建arm64镜像
+    docker pull registry.saas.crland.com.cn/java/nginx:1.21.6-arm64
+    docker buildx use default
+    docker buildx ls
+    docker buildx build -f Dockerfile.arm -t ${DOCKER_REGISTRY}/${GROUP_NAME}/${PROJECT_NAME}:${CI_COMMIT_TAG} . --platform=linux/arm64  --push
+    # 清理镜像
+    docker rmi ${DOCKER_REGISTRY}/${GROUP_NAME}/${PROJECT_NAME}:${CI_COMMIT_TAG}
+  }
+
+before_script:
+  - *auto_devops

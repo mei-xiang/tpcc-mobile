@@ -1,0 +1,163 @@
+.sysDetails {
+  width: 100%;
+  min-height: 100vh;
+  padding: 70px 0 0 0;
+  background-color: #f1f2f9;
+  font-size: 12px;
+  color: #1d252f;
+  position: relative;
+  &.iphone-device {
+    // padding: 118px 0 50px 0;
+    .fix-header {
+      padding-top: 40px;
+      height: 118px;
+      // height: 70px;
+    }
+  }
+  .fix-header {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999999;
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    height: 70px;
+    background-image: url("~@/assets/images/img-bg.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    box-sizing: border-box;
+    /deep/.nav-bar {
+      background-color: transparent;
+      &::after {
+        border: none;
+      }
+      .van-nav-bar__content {
+        height: 40px;
+      }
+      .van-nav-bar__left {
+        .van-image {
+          width: 20px !important;
+          height: 20px !important;
+        }
+      }
+      .van-nav-bar__title {
+        font-size: 13px;
+        color: #1d252f;
+        font-weight: 700;
+      }
+      .van-nav-bar__right {
+        font-size: 13px;
+        color: #1d252f;
+        font-weight: 700;
+      }
+    }
+    /deep/.header-bar {
+      // height: 22px;
+      // line-height: 22px;
+      .header-bar-item {
+        font-size: 13px;
+        color: #1d252f;
+      }
+      .header-bar-item-active {
+        color: #526ae7;
+      }
+    }
+  }
+  .footer-box {
+    margin: 40px 0;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    position: relative;
+    span {
+      display: inline-block;
+      padding: 0 16px;
+      position: relative;
+      color: #8d9eae;
+      background-color: #f1f2f9;
+      z-index: 2;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: #c4c4c4;
+      z-index: 1;
+    }
+  }
+
+  /deep/ .card-analysis {
+    position: relative;
+    background: #ffffff;
+    margin-bottom: 10px;
+    .card-wrap {
+      padding: 10px 12px 10px 12px;
+      &.radius-wrap {
+        border-radius: 12px 12px 0 0;
+        position: relative;
+        z-index: 2;
+        background: #fff;
+      }
+      .no-data-box {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        width: 100%;
+        line-height: 20px;
+        margin-top: 10px;
+        span {
+          color: #808080;
+          font-size: 12px;
+        }
+        img {
+          width: 180px;
+          height: 150px;
+          margin: 0 auto;
+        }
+      }
+      .look-all {
+        text-align: right;
+        font-size: 10px;
+        color: rgba(29, 33, 41, 1);
+        cursor: pointer;
+      }
+      .echarts-box {
+        margin-bottom: 0;
+      }
+    }
+    .border-left-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 15px;
+      height: 15px;
+      background-color: #dee4fb;
+      z-index: 1;
+    }
+    .border-right-top {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 15px;
+      height: 15px;
+      background-color: #e4e9fc;
+      z-index: 1;
+    }
+  }
+  @media screen and (min-width: 700px) {
+    /deep/ .card-analysis {
+      .border-left-top {
+        background-color: #eaeefd;
+      }
+      .border-right-top {
+        background-color: #f0f3fe;
+      }
+    }
+  }
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta
+      name="viewport"
+      content="width=device-width,viewport-fit=cover,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"
+    />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta
+      http-equiv="cache-control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="expires" content="0" />
+    <script
+      type="text/javascript"
+      src="<%= BASE_URL %>static/h5-js-sdk-1.5.12.js"
+    ></script>
+    <script>
+      // if (700 < screen.width && screen.width < 1366) {
+      //   (head = document.getElementsByTagName("head")),
+      //     (viewport = document.createElement("meta")),
+      //     (viewport.name = "viewport"),
+      //     (viewport.content =
+      //       "target-densitydpi=device-dpi, width=1024, user-scalable=no"),
+      //     head.length > 0 && head[head.length - 1].appendChild(viewport);
+      // }
+      /*let os = function () {
+      let ua = navigator.userAgent,
+        isWindowsPhone = /(?:Windows Phone)/.test(ua),
+        isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
+        isAndroid = /(?:Android)/.test(ua),
+        isFireFox = /(?:Firefox)/.test(ua),
+        isChrome = /(?:Chrome|CriOS)/.test(ua),
+        isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua)),
+        isPhone = /(?:iPhone)/.test(ua) && !isTablet,
+        isPc = !isPhone && !isAndroid && !isSymbian;
+      return {
+        isChrome: isChrome,
+      };
+    }();
+
+    if (os.isChrome) {
+      alert("isChrome");
+    }*/
+
+      //     isEquipment(){
+      //     let UA = navigator.userAgent,
+      //         isAndroid = /android|adr|linux/gi.test(UA),
+      //         isIOS = /iphone|ipod|ipad/gi.test(UA) && !isAndroid,
+      //         isBlackBerry = /BlackBerry/i.test(UA),
+      //         isWindowPhone = /IEMobile/i.test(UA),
+      //         isMobile = isAndroid || isIOS || isBlackBerry || isWindowPhone;
+      //     return{
+      //         isAndroid: isAndroid,
+      //         isIOS: isIOS,
+      //         isMobile: isMobile,
+      //         isWeixin: /MicroMessenger/gi.test(UA),
+      //         isQQ: /QQ/gi.test(UA),
+      //         isPC: !isMobile,
+      //         isWeibo: /WeiBo/gi.test(UA)
+      //     }
+      //  },
+
+      // 获取手机类型
+      //判断数组中是否包含某字符串
+      // Array.prototype.contains = function(needle) {
+      //     for (i in this) {
+      //         if (this[i].indexOf(needle) > 0)
+      //             return i;
+      //     }
+      //     return -1;
+      // }
+
+      // var device_type = navigator.userAgent; //获取userAgent信息
+      // // document.write(device_type); //打印到页面
+      // var md = new MobileDetect(device_type); //初始化mobile-detect
+      // var os = md.os(); //获取系统
+      // console.log(os)
+      // var model = "";
+      // if (os == "iOS") { //ios系统的处理
+      //     os = +md.version("iPhone");
+      //     console.log(os)
+      //     model = md.mobile();
+      // } else if (os == "AndroidOS") { //Android系统的处理
+      //     os = md.os() + md.version("Android");
+      //     var sss = device_type.split(";");
+      //     var i = sss.contains("Build/");
+      //     if (i > -1) {
+      //         model = sss[i].substring(0, sss[i].indexOf("Build/"));
+      //     }
+      // }
+      // alert(os + "---" + model);//打印系统版本和手机型号
+      // console.log(model + '||' + os, '打印系统版本和手机型号')
+      // 获取手机类型结束
+    </script>
+  </head>
+  <body class="page-body">
+    <noscript>
+      <strong
+        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to
+        continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+  </body>
+  <style>
+
+    .page-body {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+    
+
+    #app {
+      padding-top: constant(safe-area-inset-top); /* iOS 11.0 */
+      padding-top: env(safe-area-inset-top); /* iOS 11.2 */
+      padding-bottom: constant(safe-area-inset-bottom);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  </style>
+</html>
